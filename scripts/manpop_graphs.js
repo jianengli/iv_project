@@ -161,129 +161,129 @@ d3.csv('data/nta.csv', function(file) {
   });
 });
 
-// Update the Info panel graph.
-function getPopulationGraph(container, ntaid, day) {
+// // Update the Info panel graph.
+// function getPopulationGraph(container, ntaid, day) {
 
-  // Format the day.
-  var day_long = dayFormatterLong(day);
+//   // Format the day.
+//   var day_long = dayFormatterLong(day);
 
-  // Set the graph's title.
-  container.text('');
-  container.append("div")
-           .text("This Area's Est. Population for " + day_long + "s")
-           .style("text-align", "center");
+//   // Set the graph's title.
+//   container.text('');
+//   container.append("div")
+//            .text("This Area's Est. Population for " + day_long + "s")
+//            .style("text-align", "center");
 
-  // Init SVG container for the graph.
-  var svg = container.append("svg").attr("width", offsetX*2 + step*23 + 10)
-                                   .attr("height", height + offsetY*2 + 10);
+//   // Init SVG container for the graph.
+//   var svg = container.append("svg").attr("width", offsetX*2 + step*23 + 10)
+//                                    .attr("height", height + offsetY*2 + 10);
 
-  // Take the min and max for the whole week and make it the Y-axis range.
-  var max = data[ntaid]["max"];
-  var min = data[ntaid]["min"];
-  var dayData = data[ntaid][day].slice(0);
+//   // Take the min and max for the whole week and make it the Y-axis range.
+//   var max = data[ntaid]["max"];
+//   var min = data[ntaid]["min"];
+//   var dayData = data[ntaid][day].slice(0);
 
-  for (i = 0; i < dayData.length; i++) {
-    dayData[i] = (dayData[i] - min) / (max - min);
-  }
+//   for (i = 0; i < dayData.length; i++) {
+//     dayData[i] = (dayData[i] - min) / (max - min);  // normalisation to [0,1]
+//   }
 
-  // Set the D3 Y axis objects with the new range.
-  yAvailability = d3.scale.linear()
-                    .range([height, 0])
-                    .domain([min, max]);
+//   // Set the D3 Y axis objects with the new range.
+//   yAvailability = d3.scale.linear()
+//                     .range([height, 0])
+//                     .domain([min, max]);
 
-  yAxisAvailabilityR = d3.svg.axis()
-                         .scale(yAvailability)
-                         .ticks(3)
-                         .tickFormat(d3.format("s"))
-                         .orient("right");
+//   yAxisAvailabilityR = d3.svg.axis()
+//                          .scale(yAvailability)
+//                          .ticks(3)
+//                          .tickFormat(d3.format("s"))
+//                          .orient("right");
 
-  yAxisAvailabilityL = d3.svg.axis()
-                         .scale(yAvailability)
-                         .ticks(3)
-                         .tickFormat(d3.format("s"))
-                         .orient("left");
+//   yAxisAvailabilityL = d3.svg.axis()
+//                          .scale(yAvailability)
+//                          .ticks(3)
+//                          .tickFormat(d3.format("s"))
+//                          .orient("left");
 
-  if(data[ntaid]) {
+//   if(data[ntaid]) {
 
-    // Build the line and assign to div.
-    svg.append("g")
-       .append("svg:path")
-       .attr("fill", "none")
-       .style("stroke", "#fff")
-       .style("opacity", 0.7)
-       .style("stroke-width", 2)
-       .attr("id", "p" + ntaid)
-       .attr("transform", "translate(" + offsetX + "," + offsetY + ")")
-       .attr("d", function() { return line(dayData); });
+//     // Build the line and assign to div.
+//     svg.append("g")
+//        .append("svg:path")
+//        .attr("fill", "none")
+//        .style("stroke", "#fff")
+//        .style("opacity", 0.7)
+//        .style("stroke-width", 2)
+//        .attr("id", "p" + ntaid)
+//        .attr("transform", "translate(" + offsetX + "," + offsetY + ")")
+//        .attr("d", function() { return line(dayData); });
 
-    // Build the X axis.
-    svg.append("g")
-       .attr("class", "x axis")
-       .attr("transform", "translate(" + offsetX + ", " + (offsetY + height) + ")")
-       .call(xAxis);
+//     // Build the X axis.
+//     svg.append("g")
+//        .attr("class", "x axis")
+//        .attr("transform", "translate(" + offsetX + ", " + (offsetY + height) + ")")
+//        .call(xAxis);
 
-    // Build the Y axis (left).
-    svg.append("g")
-       .attr("class", "y axis")
-       .attr("transform", "translate("+ offsetX + "," + offsetY + ")")
-       .call(yAxisAvailabilityL);
+//     // Build the Y axis (left).
+//     svg.append("g")
+//        .attr("class", "y axis")
+//        .attr("transform", "translate("+ offsetX + "," + offsetY + ")")
+//        .call(yAxisAvailabilityL);
 
-    // Build the Y axis (right).
-    svg.append("g")
-       .attr("class", "y axis")
-       .attr("transform", "translate("+ (offsetX + step*23) + "," + offsetY + ")")
-       .call(yAxisAvailabilityR);
-  }
-}
+//     // Build the Y axis (right).
+//     svg.append("g")
+//        .attr("class", "y axis")
+//        .attr("transform", "translate("+ (offsetX + step*23) + "," + offsetY + ")")
+//        .call(yAxisAvailabilityR);
+//   }
+// }
 
-// Update the Info panel.
-function updateInfo(div, region, day, time) {
+// // Update the Info panel.
+// function updateInfo(div, region, day, time) {
 
-  // Get the population for the region and day.
-  var dayData = data[region][day];
+//   // Get the population for the region and day.
+//   var dayData = data[region][day];
 
-  // Store the day's max and min.
-  var dayMax = Math.max(dayData);
-  var dayMin = Math.max(dayData);
+//   // Store the day's max and min.
+//   var dayMax = Math.max(dayData);
+//   var dayMin = Math.max(dayData);
 
-  // Store the daytime flux as a percent.
-  var percFlux = Math.round((dayData[15]-dayData[3])*100/dayData[3]);
-  var nomFlux = Math.round((dayData[15]-dayData[3])/1000)*1000;
+//   // Store the daytime flux as a percent.
+//   var percFlux = Math.round((dayData[15]-dayData[3])*100/dayData[3]);
+//   var nomFlux = Math.round((dayData[15]-dayData[3])/1000)*1000;
 
-  // Get the type by comparing daytime vs nighttime populations.
-  if (percFlux>=7) {
-    var type = "Importer";
-  } else if (percFlux<=-7) {
-    var type = "Exporter";
-  } else {
-    var type = "Balanced";
-  };
+//   // Get the type by comparing daytime vs nighttime populations.
+//   if (percFlux>=7) {
+//     var type = "Importer";
+//   } else if (percFlux<=-7) {
+//     var type = "Exporter";
+//   } else {
+//     var type = "Balanced";
+//   };
 
-  // Change Region name.
-  infoHeader.text(ntaFormatter(region));
+//   // Change Region name.
+//   infoHeader.text(ntaFormatter(region));
 
-  // Update Population graph.
-  getPopulationGraph(div, region, day);
+//   // Update Population graph.
+//   getPopulationGraph(div, region, day);
 
-  // Change Import/Export type.
-  d3.select("#info-ntatype-caption")
-    .text("Import/Export Type for " + dayFormatterLong(day) + "s:");
-  d3.select("#info-ntatype-value").text(type);
+//   // Change Import/Export type.
+//   d3.select("#info-ntatype-caption")
+//     .text("Import/Export Type for " + dayFormatterLong(day) + "s:");
+//   d3.select("#info-ntatype-value").text(type);
 
-  // Change Flux data.
-  d3.select("#info-ntaflux-caption")
-    .text(dayFormatterLong(day) + " Peak Pop. Change:");
-  d3.select("#info-ntaflux-value")
-    .text(numberWithCommas(nomFlux) + " (" + numberWithCommas(percFlux) + "%)");
+//   // Change Flux data.
+//   d3.select("#info-ntaflux-caption")
+//     .text(dayFormatterLong(day) + " Peak Pop. Change:");
+//   d3.select("#info-ntaflux-value")
+//     .text(numberWithCommas(nomFlux) + " (" + numberWithCommas(percFlux) + "%)");
   
-  if (type == "Importer") d3.select("#info-ntaflux-value").style("color", "#66bd63");
-  if (type == "Exporter") d3.select("#info-ntaflux-value").style("color", "#f46d43");
-  if (type == "Balanced") d3.select("#info-ntaflux-value").style("color", "#ffffbf");
+//   if (type == "Importer") d3.select("#info-ntaflux-value").style("color", "#66bd63");
+//   if (type == "Exporter") d3.select("#info-ntaflux-value").style("color", "#f46d43");
+//   if (type == "Balanced") d3.select("#info-ntaflux-value").style("color", "#ffffbf");
 
-  // Change Current population.
-  d3.select("#info-ntapopcurr-caption")
-    .text("Estimated Pop. for " + dayFormatterLong(day) + ", " + timeFormatter(time) + ":");
-  d3.select("#info-ntapopcurr-value")
-    .text(numberWithCommas(dayData[time]));
-}
+//   // Change Current population.
+//   d3.select("#info-ntapopcurr-caption")
+//     .text("Estimated Pop. for " + dayFormatterLong(day) + ", " + timeFormatter(time) + ":");
+//   d3.select("#info-ntapopcurr-value")
+//     .text(numberWithCommas(dayData[time]));
+// }
 

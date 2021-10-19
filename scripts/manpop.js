@@ -103,8 +103,8 @@ var start_stats_mobile = {
 
 var start_story = {
   zoom: 11.75,
-  // center: [-73.99, 40.755],
-  center: [144.939, -37.829],
+  center: [-73.99, 40.755],
+  // center: [144.939, -37.829],
   bearing: -2.35,
   pitch: 60.0
 };
@@ -120,72 +120,72 @@ const map = new mapboxgl.Map({
     pitch: start_story.pitch
 });
 
-let hoveredStateId = null;
+// let hoveredStateId = null;
 
-map.on('load', () => {
+// map.on('load', () => {
 
-    map.addSource('blocks', {
-        'type': 'geojson',
-        'data': 'https://raw.githubusercontent.com/jianengli/iv_project/main/CLUE_Blocks.geojson'
-    });
+//     map.addSource('blocks', {
+//         'type': 'geojson',
+//         'data': 'https://raw.githubusercontent.com/jianengli/iv_project/main/CLUE_Blocks.geojson'
+//     });
 
-    map.addLayer({
-        'id': 'block_fills',
-        'type': 'fill',
-        'source': 'blocks',
-        'layout': {},
-        'paint': {
-            'fill-color': '#627BC1',
-            'fill-opacity': [
-                'case',
-                ['boolean', ['feature-state', 'hover'], false],
-                0.5,
-                0.1
-            ]
-        }
-    });
+//     map.addLayer({
+//         'id': 'block_fills',
+//         'type': 'fill',
+//         'source': 'blocks',
+//         'layout': {},
+//         'paint': {
+//             'fill-color': '#627BC1',
+//             'fill-opacity': [
+//                 'case',
+//                 ['boolean', ['feature-state', 'hover'], false],
+//                 0.5,
+//                 0.1
+//             ]
+//         }
+//     });
 
-    map.addLayer({
-        'id': 'block_borders',
-        'type': 'line',
-        'source': 'blocks',
-        'layout': {},
-        'paint': {
-            'line-color': '#627BC1',
-            'line-width': 1
-        }
-    });
+//     map.addLayer({
+//         'id': 'block_borders',
+//         'type': 'line',
+//         'source': 'blocks',
+//         'layout': {},
+//         'paint': {
+//             'line-color': '#627BC1',
+//             'line-width': 1
+//         }
+//     });
 
-// When the user moves their mouse over the state-fill layer, we'll update the
-// feature state for the feature under the mouse.
-    map.on('mousemove', 'block_fills', (e) => {
-        if (e.features.length > 0) {
-            if (hoveredStateId !== null) {
-                map.setFeatureState(
-                    { source: 'blocks', id: hoveredStateId },
-                    { hover: false }
-                );
-            }
-            hoveredStateId = e.features[0].id;
-            map.setFeatureState(
-                { source: 'blocks', id: hoveredStateId },
-                { hover: true }
-            );
-        }
-    });
+// // When the user moves their mouse over the state-fill layer, we'll update the
+// // feature state for the feature under the mouse.
+//     map.on('mousemove', 'block_fills', (e) => {
+//         if (e.features.length > 0) {
+//             if (hoveredStateId !== null) {
+//                 map.setFeatureState(
+//                     { source: 'blocks', id: hoveredStateId },
+//                     { hover: false }
+//                 );
+//             }
+//             hoveredStateId = e.features[0].id;
+//             map.setFeatureState(
+//                 { source: 'blocks', id: hoveredStateId },
+//                 { hover: true }
+//             );
+//         }
+//     });
 
-// When the mouse leaves the state-fill layer, update the feature state of the
-// previously hovered feature.
-    map.on('mouseleave', 'block_fills', () => {
-        if (hoveredStateId !== null) {
-            map.setFeatureState(
-                { source: 'blocks', id: hoveredStateId },
-                { hover: false }
-            );
-        }
-        hoveredStateId = null;
-    });
-});
+// // When the mouse leaves the state-fill layer, update the feature state of the
+// // previously hovered feature.
+//     map.on('mouseleave', 'block_fills', () => {
+//         if (hoveredStateId !== null) {
+//             map.setFeatureState(
+//                 { source: 'blocks', id: hoveredStateId },
+//                 { hover: false }
+//             );
+//         }
+//         hoveredStateId = null;
+//     });
+// });
 
 // Helper Functions
 function timeFormatter(t) {

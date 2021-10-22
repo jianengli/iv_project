@@ -10,11 +10,31 @@ var neighborhood = "MN";
 var daytime;
 var daytime_stats;
 var color_total = false;
-var time = 0;
+let time = 0;
 var day = 0;
 var stime;
 var sday;
-
+const fp = {
+    'Accommodation and Food Services': 'https://raw.githubusercontent.com/jianengli/iv_project/main/data/CLUE_Blocks_with_Stats_Accommodation%20and%20Food%20Services.geojson',
+    'Agriculture, Forestry and Fishing': 'https://raw.githubusercontent.com/jianengli/iv_project/main/data/CLUE_Blocks_with_Stats_Agriculture%2C%20Forestry%20and%20Fishing.geojson',
+    'Administrative and Support Services': 'https://raw.githubusercontent.com/jianengli/iv_project/main/data/CLUE_Blocks_with_Stats_Administrative%20and%20Support%20Services.geojson',
+    'Arts and Recreation Services': 'https://raw.githubusercontent.com/jianengli/iv_project/main/data/CLUE_Blocks_with_Stats_Arts%20and%20Recreation%20Services.geojson',
+    'Construction': 'https://raw.githubusercontent.com/jianengli/iv_project/main/data/CLUE_Blocks_with_Stats_Construction.geojson',
+    'Education and Training': 'https://raw.githubusercontent.com/jianengli/iv_project/main/data/CLUE_Blocks_with_Stats_Education%20and%20Training.geojson',
+    'Electricity, Gas, Water and Waste Services': 'https://raw.githubusercontent.com/jianengli/iv_project/main/data/CLUE_Blocks_with_Stats_Electricity%2C%20Gas%2C%20Water%20and%20Waste%20Services.geojson',
+    'Financial and Insurance Services': 'https://raw.githubusercontent.com/jianengli/iv_project/main/data/CLUE_Blocks_with_Stats_Financial%20and%20Insurance%20Services.geojson',
+    'Health Care and Social Assistance': 'https://raw.githubusercontent.com/jianengli/iv_project/main/data/CLUE_Blocks_with_Stats_Health%20Care%20and%20Social%20Assistance.geojson',
+    'Information Media and Telecommunications': 'https://raw.githubusercontent.com/jianengli/iv_project/main/data/CLUE_Blocks_with_Stats_Information%20Media%20and%20Telecommunications.geojson',
+    'Manufacturing': 'https://raw.githubusercontent.com/jianengli/iv_project/main/data/CLUE_Blocks_with_Stats_Manufacturing.geojson',
+    'Mining': 'https://raw.githubusercontent.com/jianengli/iv_project/main/data/CLUE_Blocks_with_Stats_Mining.geojson',
+    'Other Services': 'https://raw.githubusercontent.com/jianengli/iv_project/main/data/CLUE_Blocks_with_Stats_Other%20Services.geojson',
+    'Professional, Scientific and Technical Services': 'https://raw.githubusercontent.com/jianengli/iv_project/main/data/CLUE_Blocks_with_Stats_Professional%2C%20Scientific%20and%20Technical%20Services.geojson',
+    'Public Administration and Safety': 'https://raw.githubusercontent.com/jianengli/iv_project/main/data/CLUE_Blocks_with_Stats_Public%20Administration%20and%20Safety.geojson',
+    'Rental, Hiring and Real Estate Services': 'https://raw.githubusercontent.com/jianengli/iv_project/main/data/CLUE_Blocks_with_Stats_Rental%2C%20Hiring%20and%20Real%20Estate%20Services.geojson',
+    'Retail Trade': 'https://raw.githubusercontent.com/jianengli/iv_project/main/data/CLUE_Blocks_with_Stats_Retail%20Trade.geojson',
+    'Transport, Postal and Warehousing': 'https://raw.githubusercontent.com/jianengli/iv_project/main/data/CLUE_Blocks_with_Stats_Transport%2C%20Postal%20and%20Warehousing.geojson',
+    'Wholesale Trade': 'https://raw.githubusercontent.com/jianengli/iv_project/main/data/CLUE_Blocks_with_Stats_Wholesale%20Trade.geojson'
+}
 // LOCAL TIME //
 var currentDate = new Date();
 var currentDay = (currentDate.getDay() == 0) ? 6 : currentDate.getDay() - 1;
@@ -260,47 +280,16 @@ function changeTime(settings) {
                           {"base": 1,
                            "type": "interval",
                            "property": daytime,
-                           "stops": [[0, "#fff7ec"],
-                                     [10, "#fdd49e"],
-                                     [20, "#fee8c8"],
-                                     [40, "#fdbb84"],
-                                     [80, "#fc8d59"],
-                                     [160, "#ef6548"],
-                                     [320, "#d7301f"],
-                                     [640, "#b30000"],
-                                     [1280, "#7f0000"]],
+                           "stops": [[0, "#aac9fa"],
+                                     [0.01, "#fdd49e"],
+                                     [0.02, "#fee8c8"],
+                                     [0.04, "#fdbb84"],
+                                     [0.08, "#fc8d59"],
+                                     [0.16, "#ef6548"],
+                                     [0.32, "#d7301f"],
+                                     [0.64, "#b30000"],
+                                     [0.90, "#7f0000"]],
                            "default": "#800026"});
-
-    // STATS
-    map.setPaintProperty("stats-highlighted",
-                         "fill-color",
-                         {"base": 1,
-                          "type": "interval",
-                          "property": daytime_stats,
-                          "stops": [[-4000, "#d73027"],
-                                    [-2000, "#f46d43"],
-                                    [-1000, "#fdae61"],
-                                    [-500, "#fee08b"],
-                                    [500, "#ffffbf"],
-                                    [2000, "#d9ef8b"],
-                                    [4000, "#a6d96a"],
-                                    [12000, "#66bd63"],
-                                    [32000, "#1a9850"]]});
-
-    map.setPaintProperty("stats-dimmed",
-                         "fill-color",
-                          {"base": 1,
-                           "type": "interval",
-                           "property": daytime_stats,
-                           "stops": [[-4000, "#d73027"],
-                                     [-2000, "#f46d43"],
-                                     [-1000, "#fdae61"],
-                                     [-500, "#fee08b"],
-                                     [500, "#ffffbf"],
-                                     [2000, "#d9ef8b"],
-                                     [4000, "#a6d96a"],
-                                     [12000, "#66bd63"],
-                                     [32000, "#1a9850"]]});
 
     if (nta_clicked) 
       updateInfo(infoGraph, neighborhood, day, time);
@@ -438,12 +427,8 @@ function changeMode(settings) {
 // Define map behavior and callback functions.
 map.on("load", function(e) {
 
-  // Add Source.
-  /*
-  map.addSource("blocks", {type: "vector",
-                           url: "ziyizhang2.0081nfnc"});
-
   // Add VIZ layer.
+    /*
   map.addLayer({"id": "viz",
                 "type": "fill-extrusion", //3d
                 "source": "blocks",
@@ -466,51 +451,8 @@ map.on("load", function(e) {
                                                              [640, "#b30000"],
                                                              [1280, "#7f0000"]]}}});
 
-  // // Stats
-  // map.addSource("cts", {type: "vector",
-  //                       url: "mapbox://citrusvanilla.8bacl9xx"});
 
-  // Add DATA HIGHLIGHTED layer.
-  map.addLayer({"id": "stats-highlighted",
-                "type": "fill",
-                "source": "cts",
-                "source-layer": "cts2-68ojp8",
-                "filter" : ["in", "NTACode", ""],
-                "paint": {"fill-opacity": 0.85,
-                          "fill-color": {"base": 1,
-                                         "type": "interval",
-                                         "property": "0d",
-                                         "stops": [[-4000, "#d73027"],
-                                                   [-2000, "#f46d43"],
-                                                   [-1000, "#fdae61"],
-                                                   [-500, "#fee08b"],
-                                                   [500, "#ffffbf"],
-                                                   [2000, "#d9ef8b"],
-                                                   [4000, "#a6d96a"],
-                                                   [12000, "#66bd63"],
-                                                   [32000, "#1a9850"]]}}}
-                , 'road-label-small');
-
-  // Add DATA DIMMED layer.
-  map.addLayer({"id": "stats-dimmed",
-                "type": "fill",
-                "source": "cts",
-                "source-layer": "cts2-68ojp8",
-                "paint": {"fill-opacity": 0.30,
-                          "fill-color": {"base": 1,
-                                         "type": "interval",
-                                         "property": "0d",
-                                         "stops": [[-4000, "#d73027"],
-                                                   [-2000, "#f46d43"],
-                                                   [-1000, "#fdae61"],
-                                                   [-500, "#fee08b"],
-                                                   [500, "#ffffbf"],
-                                                   [2000, "#d9ef8b"],
-                                                   [4000, "#a6d96a"],
-                                                   [12000, "#66bd63"],
-                                                   [32000, "#1a9850"]]}}}
-                , 'road-label-small');
-
+     */
   // Draw sliders.
   getSliders();
 
@@ -538,43 +480,40 @@ map.on("load", function(e) {
     map.setFilter('viz', ['in', 'cd'].concat(Array.from(filter)));
   });
 
-  // Modes control.
-  vizControl.on('click', function () {changeMode({id: 'viz'});});
-  statsControl.on('click', function () {changeMode({id: 'stats'});});
-  storyControl.on('click', function () {changeMode({id: 'story'});});
 
-  // Callback for STATS overlay mouse movement (on).
-  map.on('mousemove', 'stats-dimmed', function(e) {
-
-    // Interactive Cursor.
-    map.getCanvas().style.cursor = 'pointer';
-
-    // If there is no map focus...
-    if (!nta_clicked) {
-
-      // Single out the first found feature.
-      var feature = e.features[0];
-
-      // Get the feature's neighborhood (NTA).
-      neighborhood = feature.properties.NTACode;
-
-      // Filter map overlay for the NTA.
-      map.setFilter('stats-highlighted', ['in', 'NTACode', neighborhood]);
-
-      // Update the info panel.
-      updateInfo(infoGraph, neighborhood, day, time);
-    }
-  });
-    */
     let hoveredStateId = null;
 
     map.addSource('blocks', {
         'type': 'geojson',
-        'data': 'https://raw.githubusercontent.com/jianengli/iv_project/main/CLUE_Blocks_with_Stats.geojson'
+        'data': fp['Financial and Insurance Services']
     });
 
 // The feature-state dependent fill-opacity expression will render the hover effect
 // when a feature's hover state is set to true.
+    map.addLayer({
+        'id': 'block-fills',
+        'type': 'fill-extrusion',
+        'source': 'blocks',
+        'layout': {},
+        "paint": {"fill-extrusion-opacity": 0.8,
+            "fill-extrusion-height": ["*", ["get", "2002"], 5000],
+            "fill-extrusion-height-transition": {duration: 500,
+                delay: 0},
+            "fill-extrusion-color": {"base": 1,
+                "type": "interval",
+                "property": "2002",
+                "default": "#800026",
+                "stops": [[0, "#aac9fa"],
+                    [0.01, "#fdd49e"],
+                    [0.02, "#fee8c8"],
+                    [0.04, "#fdbb84"],
+                    [0.08, "#fc8d59"],
+                    [0.16, "#ef6548"],
+                    [0.32, "#d7301f"],
+                    [0.64, "#b30000"],
+                    [0.90, "#7f0000"]]}}
+    });
+    /*
     map.addLayer({
         'id': 'block-fills',
         'type': 'fill',
@@ -621,6 +560,7 @@ map.on("load", function(e) {
         }
     });
 
+
 // When the mouse leaves the state-fill layer, update the feature state of the
 // previously hovered feature.
     map.on('mouseleave', 'block-fills', () => {
@@ -632,6 +572,8 @@ map.on("load", function(e) {
         }
         hoveredStateId = null;
     });
+
+     */
 
   map.on('mousemove', (e) => {
     const features = map.queryRenderedFeatures(e.point);

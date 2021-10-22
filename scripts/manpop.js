@@ -97,7 +97,8 @@ var start_stats = {
 
 var start_story = {
   zoom: 11.75,
-  center: [-73.99, 40.755],
+  // center: [-73.99, 40.755],
+  center: [144.951, -37.818],
   bearing: -2.35,
   pitch: 60.0
 };
@@ -438,6 +439,7 @@ function changeMode(settings) {
 map.on("load", function(e) {
 
   // Add Source.
+  /*
   map.addSource("blocks", {type: "vector",
                            url: "ziyizhang2.0081nfnc"});
 
@@ -543,13 +545,13 @@ map.on("load", function(e) {
 
   // Callback for STATS overlay mouse movement (on).
   map.on('mousemove', 'stats-dimmed', function(e) {
-    
+
     // Interactive Cursor.
     map.getCanvas().style.cursor = 'pointer';
 
     // If there is no map focus...
     if (!nta_clicked) {
-      
+
       // Single out the first found feature.
       var feature = e.features[0];
 
@@ -563,108 +565,104 @@ map.on("load", function(e) {
       updateInfo(infoGraph, neighborhood, day, time);
     }
   });
+    */
+    let hoveredStateId = null;
 
-  // Callback for STATS overlay mouse movement (leave).
-  map.on('mouseleave', 'stats-dimmed', function(e) {
+    map.addSource('blocks', {
+        'type': 'geojson',
+        'data': 'https://raw.githubusercontent.com/jianengli/iv_project/main/CLUE_Blocks_with_Stats.geojson'
+    });
 
-    // Change the cursor style again.
-    map.getCanvas().style.cursor = '';
+// The feature-state dependent fill-opacity expression will render the hover effect
+// when a feature's hover state is set to true.
+    map.addLayer({
+        'id': 'block-fills',
+        'type': 'fill',
+        'source': 'blocks',
+        'layout': {},
+        'paint': {
+            'fill-color': '#627BC1',
+            'fill-opacity': [
+                'case',
+                ['boolean', ['feature-state', 'hover'], false],
+                1,
+                0.5
+            ]
+        }
+    });
 
-    // If not map focus...
-    if (!nta_clicked) {
-      
-      // Clear Filters.
-      map.setFilter('stats-highlighted', ['in', 'NTACode', '']);
-      map.setFilter('stats-dimmed', null);
+    map.addLayer({
+        'id': 'block-borders',
+        'type': 'line',
+        'source': 'blocks',
+        'layout': {},
+        'paint': {
+            'line-color': '#627BC1',
+            'line-width': 2
+        }
+    });
 
-      // Update info panel with Manhattan data.
-      updateInfo(infoGraph, "MN", day, time);
-    }
-  });
+// When the user moves their mouse over the state-fill layer, we'll update the
+// feature state for the feature under the mouse.
+    map.on('mousemove', 'block-fills', (e) => {
+        // window.alert(e.features[0].id);
+        if (e.features.length > 0) {
+            if (hoveredStateId !== null) {
+                map.setFeatureState(
+                    { source: 'blocks', id: hoveredStateId },
+                    { hover: false }
+                );
+            }
+            hoveredStateId = e.features[0].id;
+            map.setFeatureState(
+                { source: 'blocks', id: hoveredStateId },
+                { hover: true }
+            );
+        }
+    });
 
-  // Callback for STATS overlay mouse click.
-  map.on('click', function(e) {
+// When the mouse leaves the state-fill layer, update the feature state of the
+// previously hovered feature.
+    map.on('mouseleave', 'block-fills', () => {
+        if (hoveredStateId !== null) {
+            map.setFeatureState(
+                { source: 'blocks', id: hoveredStateId },
+                { hover: false }
+            );
+        }
+        hoveredStateId = null;
+    });
 
-    if (currentMode == "stats") {
-      // Expand map query bounding box.
-      var bbox = [[(e.point.x-5), (e.point.y-5)], 
-                  [(e.point.x+5), (e.point.y+5)]];
-
-      // Search for feature in both highlighted and dimmed layers.
-      var features = map.queryRenderedFeatures(bbox,
-                                               {layers: ['stats-highlighted',
-                                                         'stats-dimmed']});
-
-      // If feature found...
-      if (features.length) {
-        
-        // Map overlay focus.
-        nta_clicked = true;
-
-        // Turn hightlighted map feature.
-        neighborhood = features[0].properties.NTACode;
-        map.setFilter('stats-highlighted', ['in', 'NTACode', neighborhood]);
-
-        // Center map view on feature.
-        map.flyTo({
-          center: e.lngLat,
-          zoom: 12.5,
-          bearing: 28.5,
-          pitch: 0.00
-        });
-
-        // Update panel.
-        updateInfo(infoGraph, neighborhood, day, time);
-
-
-      } else { // No feature found.
-        
-        // Clear focus, clear feature.
-        nta_clicked = false;
-        map.setFilter('stats-highlighted', ['in', 'NTACode', '']);
-
-        // Re-center map.
-        if (media == "full")
-          map.flyTo(start_stats);
-        else
-          map.flyTo(start_stats_mobile);
-
-        // Update info panel with Manhattan data.
-        updateInfo(infoGraph, "MN", day, time);
-      }
-    }
-  });
-
-    map.on('mousemove', (e) => {
-        const features = map.queryRenderedFeatures(e.point);
+  map.on('mousemove', (e) => {
+    const features = map.queryRenderedFeatures(e.point);
 
 // Limit the number of properties we're displaying for
 // legibility and performance
-        const displayProperties = [
-            'type',
-            'properties',
-            'id',
-            'layer',
-            'source',
-            'sourceLayer',
-            'state'
-        ];
+    const displayProperties = [
+        'type',
+        'properties',
+        'id',
+        'layer',
+        'source',
+        'sourceLayer',
+        'state'
+    ];
 
-        const displayFeatures = features.map((feat) => {
-            const displayFeat = {};
-            displayProperties.forEach((prop) => {
-                displayFeat[prop] = feat[prop];
-            });
-            return displayFeat;
+    const displayFeatures = features.map((feat) => {
+        const displayFeat = {};
+        displayProperties.forEach((prop) => {
+            displayFeat[prop] = feat[prop];
         });
+        return displayFeat;
+    });
 
 // Write object as string with an indent of two spaces.
-        document.getElementById('features').innerHTML = JSON.stringify(
-            displayFeatures,
-            null,
-            2
-        );
-    });
+    document.getElementById('features').innerHTML = JSON.stringify(
+        displayFeatures,
+        null,
+        2
+    );
+  });
 
   // Initialize app mode.
   if (media == "full") changeMode({id: 'story'});

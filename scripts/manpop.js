@@ -20,29 +20,29 @@ var currentDate = new Date();
 var currentDay = (currentDate.getDay() == 0) ? 6 : currentDate.getDay() - 1;
 var currentHour = currentDate.getHours();
 
-// // Media Vars
-// var media;
-// var isNarrow = window.matchMedia("(max-width: 620px)");
-// function changeMedia(x) {
-//   if (x.matches) {
+// Media Vars
+var media;
+var isNarrow = window.matchMedia("(max-width: 620px)");
+function changeMedia(x) {
+  if (x.matches) {
     
-//     // Update media var.
-//     media = "mobile";
+    // Update media var.
+    media = "mobile";
     
-//     // Hide sliders from story mode ONLY.
-//     if (currentMode == "stats") {
-//       d3.select("#controls").style("bottom", "140px");
-//     } else {
-//       d3.select("#controls").style("bottom", "30px");
-//     }
+    // Hide sliders from story mode ONLY.
+    if (currentMode == "stats") {
+      d3.select("#controls").style("bottom", "140px");
+    } else {
+      d3.select("#controls").style("bottom", "30px");
+    }
 
-//   } else {
-//     media = "full";
-//     d3.select("#controls").style("display", "block");
-//   };
-// };
-// changeMedia(isNarrow); // Call listener function at run time
-// isNarrow.addListener(changeMedia); // Attach listener function on state changes
+  } else {
+    media = "full";
+    d3.select("#controls").style("display", "block");
+  };
+};
+changeMedia(isNarrow); // Call listener function at run time
+isNarrow.addListener(changeMedia); // Attach listener function on state changes
 
 // CB Controls vars
 var cb1 = d3.select("#cb1");
@@ -73,53 +73,45 @@ var nta_clicked = false;
 var story = d3.select("#storymode");
 
 // Map vars
-// var start_viz = {
-//   zoom: 11.75,
-//   center: [-73.97, 40.755],
-//   bearing: -2.35,
-//   pitch: 60.0
-// };
-
-// var start_viz_mobile = {
-//   zoom: 11.0,
-//   center: [-73.985, 40.75],
-//   bearing: -2.35,
-//   pitch: 60.0
-// };
-
-// var start_stats = {
-//   center: [-73.98, 40.79],
-//   zoom: 10.50,
-//   bearing: 28.5,
-//   pitch: 0.00
-// };
-
-// var start_stats_mobile = {
-//   center: [-73.97, 40.77],
-//   zoom: 10.0,
-//   bearing: 28.5,
-//   pitch: 0.00
-// };
-
-var start_story = {
+var start_viz = {
   zoom: 11.75,
-  center: [-73.99, 40.755],
-  // center: [144.939, -37.829],
+  center: [-73.97, 40.755],
   bearing: -2.35,
   pitch: 60.0
 };
 
-const map = new mapboxgl.Map({
-    container: "map",
-    style: "mapbox://styles/ziyizhang2/ckusigfyo5cnj17pj0ukvst8r",
-    center: start_story.center,
-    zoom: start_story.zoom,
-    maxZoom: 15,
-    // minZoom: 10,
-    bearing: start_story.bearing,
-    pitch: start_story.pitch
-});
+var start_viz_mobile = {
+  zoom: 11.0,
+  center: [-73.985, 40.75],
+  bearing: -2.35,
+  pitch: 60.0
+};
 
+var start_stats = {
+  center: [-73.98, 40.79],
+  zoom: 10.50,
+  bearing: 28.5,
+  pitch: 0.00
+};
+
+
+var start_story = {
+  zoom: 11.75,
+  center: [-73.99, 40.755],
+  bearing: -2.35,
+  pitch: 60.0
+};
+
+var map = new mapboxgl.Map({
+  container: "map",
+  style: "mapbox://styles/ziyizhang2/ckv2f3zcu3ocs14o5tha20x18",
+  center: start_story.center,
+  zoom: start_story.zoom,
+  maxZoom: 15,
+  //minZoom: 10,
+  bearing: start_story.bearing,
+  pitch: start_story.pitch
+});
 
 
 // Helper Functions
@@ -146,18 +138,18 @@ function dayFormatterShort(d) {
 
 
 // About Module Callbacks
-// d3.select("#about-map-button").on("click", function() {
-//   d3.select("#about").style("display", "none");});
+d3.select("#about-map-button").on("click", function() {
+  d3.select("#about").style("display", "none");});
 
-// d3.select("#about-close").on("click", function() {
-//   d3.select("#about").style("display", "none");});
+d3.select("#about-close").on("click", function() {
+  d3.select("#about").style("display", "none");});
 
-// d3.select("#about").on("click", function() {
-//   d3.select("#about").style("display", "none");});
+d3.select("#about").on("click", function() {
+  d3.select("#about").style("display", "none");});
 
-// d3.select("#about-link").on("click", function() {
-//   d3.select("#about").style("display", "block");
-// });
+d3.select("#about-link").on("click", function() {
+  d3.select("#about").style("display", "block");
+});
 
 
 // Legend Display callbacks
@@ -324,16 +316,16 @@ function changeMode(settings) {
   d3.select("#cbs-content").style("display", (settings.id == "viz" || settings.id == "story") ? "block": "none");
   d3.select("#statslegend-content").style("display", (settings.id == "viz" || settings.id == "story") ? "none": "block");
 
-  // // Control Sliders.
-  // if (media == "mobile" && settings.id == "story")
-  //   d3.select("#controls").style("display", "none");
-  // else
-  //   d3.select("#controls").style("display", "block");
+  // Control Sliders.
+  if (media == "mobile" && settings.id == "story")
+    d3.select("#controls").style("display", "none");
+  else
+    d3.select("#controls").style("display", "block");
 
-  // if (media == "mobile" && settings.id == "stats")
-  //   d3.select("#controls").style("bottom", "140px");
-  // else
-  //   d3.select("#controls").style("bottom", "30px");
+  if (media == "mobile" && settings.id == "stats")
+    d3.select("#controls").style("bottom", "140px");
+  else
+    d3.select("#controls").style("bottom", "30px");
 
   // Header button attrs.
   vizControl.attr("class", (settings.id == "viz") ? "mode-selected" : "mode");
@@ -343,12 +335,12 @@ function changeMode(settings) {
   // Change the map to STATS mode.
   if (settings.id == "stats") {
     
-    // // Change map view settings.
-    // if (media == "full") {
-    //   map.flyTo(start_stats);
-    // } else {
-    //   map.flyTo(start_stats_mobile);
-    // };
+    // Change map view settings.
+    if (media == "full") {
+      map.flyTo(start_stats);
+    } else {
+      map.flyTo(start_stats_mobile);
+    };
 
     // Turn on STATS overlays and turn of VIZ overlays.
     map.setLayoutProperty("stats-dimmed", "visibility", "visible");
@@ -385,8 +377,9 @@ function changeMode(settings) {
     d3.select("#cb10").property("checked", true);
     d3.select("#cb11").property("checked", true);
     d3.select("#cb12").property("checked", true);
+    d3.select("#cb13").property("checked", true);
 
-    // Update map.
+    // Update map. TODO:
     map.setFilter('viz', ['in', 'cd', 101, 102, 103, 104, 105, 106,
                           107, 108, 109, 110, 111, 112]);
 
@@ -443,14 +436,14 @@ function changeMode(settings) {
 
 // Define map behavior and callback functions.
 map.on("load", function(e) {
-  
+
   // Add Source.
   map.addSource("blocks", {type: "vector",
-                           url: "mapbox://citrusvanilla.av3q0kfa"});
+                           url: "ziyizhang2.0081nfnc"});
 
   // Add VIZ layer.
   map.addLayer({"id": "viz",
-                "type": "fill-extrusion",
+                "type": "fill-extrusion", //3d
                 "source": "blocks",
                 "source-layer": "trimmin-bx5zqz",
                 "paint": {"fill-extrusion-opacity": 0.8,
@@ -471,9 +464,9 @@ map.on("load", function(e) {
                                                              [640, "#b30000"],
                                                              [1280, "#7f0000"]]}}});
 
-  // Stats
-  map.addSource("cts", {type: "vector",
-                        url: "mapbox://citrusvanilla.8bacl9xx"});
+  // // Stats
+  // map.addSource("cts", {type: "vector",
+  //                       url: "mapbox://citrusvanilla.8bacl9xx"});
 
   // Add DATA HIGHLIGHTED layer.
   map.addLayer({"id": "stats-highlighted",
@@ -546,49 +539,48 @@ map.on("load", function(e) {
   // Modes control.
   vizControl.on('click', function () {changeMode({id: 'viz'});});
   statsControl.on('click', function () {changeMode({id: 'stats'});});
-  // storyControl.on('click', function () {changeMode({id: 'story'});});
+  storyControl.on('click', function () {changeMode({id: 'story'});});
 
-  // // Callback for STATS overlay mouse movement (on).
-  // map.on('mousemove', 'stats-dimmed', function(e) {
+  // Callback for STATS overlay mouse movement (on).
+  map.on('mousemove', 'stats-dimmed', function(e) {
     
-  //   // Interactive Cursor.
-  //   map.getCanvas().style.cursor = 'pointer';
+    // Interactive Cursor.
+    map.getCanvas().style.cursor = 'pointer';
 
-  //   // If there is no map focus...
-  //   if (!nta_clicked) {
+    // If there is no map focus...
+    if (!nta_clicked) {
       
-  //     // Single out the first found feature.
-  //     var feature = e.features[0];
+      // Single out the first found feature.
+      var feature = e.features[0];
 
-  //     // Get the feature's neighborhood (NTA).
-  //     neighborhood = feature.properties.NTACode;
+      // Get the feature's neighborhood (NTA).
+      neighborhood = feature.properties.NTACode;
 
-  //     // Filter map overlay for the NTA.
-  //     map.setFilter('stats-highlighted', ['in', 'NTACode', neighborhood]);
+      // Filter map overlay for the NTA.
+      map.setFilter('stats-highlighted', ['in', 'NTACode', neighborhood]);
 
-  //     // Update the info panel.
-  //     updateInfo(infoGraph, neighborhood, day, time);
-  //   }
-  // });
+      // Update the info panel.
+      updateInfo(infoGraph, neighborhood, day, time);
+    }
+  });
 
-  // // Callback for STATS overlay mouse movement (leave).
-  // map.on('mouseleave', 'stats-dimmed', function(e) {
+  // Callback for STATS overlay mouse movement (leave).
+  map.on('mouseleave', 'stats-dimmed', function(e) {
 
-  //   // Change the cursor style again.
-  //   map.getCanvas().style.cursor = '';
+    // Change the cursor style again.
+    map.getCanvas().style.cursor = '';
 
-  //   // If not map focus...
-  //   if (!nta_clicked) {
+    // If not map focus...
+    if (!nta_clicked) {
       
-  //     // Clear Filters.
-  //     map.setFilter('stats-highlighted', ['in', 'NTACode', '']);
-  //     map.setFilter('stats-dimmed', null);
+      // Clear Filters.
+      map.setFilter('stats-highlighted', ['in', 'NTACode', '']);
+      map.setFilter('stats-dimmed', null);
 
-  //     // Update info panel with Manhattan data.
-  //     updateInfo(infoGraph, "MN", day, time);
-  //   }
-  // });
-
+      // Update info panel with Manhattan data.
+      updateInfo(infoGraph, "MN", day, time);
+    }
+  });
 
   // Callback for STATS overlay mouse click.
   map.on('click', function(e) {
@@ -642,6 +634,37 @@ map.on("load", function(e) {
       }
     }
   });
+
+    map.on('mousemove', (e) => {
+        const features = map.queryRenderedFeatures(e.point);
+
+// Limit the number of properties we're displaying for
+// legibility and performance
+        const displayProperties = [
+            'type',
+            'properties',
+            'id',
+            'layer',
+            'source',
+            'sourceLayer',
+            'state'
+        ];
+
+        const displayFeatures = features.map((feat) => {
+            const displayFeat = {};
+            displayProperties.forEach((prop) => {
+                displayFeat[prop] = feat[prop];
+            });
+            return displayFeat;
+        });
+
+// Write object as string with an indent of two spaces.
+        document.getElementById('features').innerHTML = JSON.stringify(
+            displayFeatures,
+            null,
+            2
+        );
+    });
 
   // Initialize app mode.
   if (media == "full") changeMode({id: 'story'});

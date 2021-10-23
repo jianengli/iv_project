@@ -469,7 +469,7 @@
         // Define Echarts line chart
         option = {
             title: {
-                text: 'Year-on-year growth rate of Business establishments in various industries',
+                text: 'Annual growth rate of Business establishments in various industries',
                 textStyle: {//Style of title content
                     color: '#0854c4',//blue
                     fontStyle: 'normal',//The font style of the main title text, the default is normal, italic (italic), oblique (italic)
@@ -478,10 +478,12 @@
                     fontSize: 24//Theme text font size, the default is 18px
                 },
                 subtextStyle: {//Subtitle content style
+                     
                 },
             },
             textStyle: {// lable 
-                fontSize: 16//主题文字字体大小，默认为18px
+                color: '#0854c4',
+                fontSize: 18//主题文字字体大小，默认为18px
             },
             tooltip: {
                 trigger: 'axis',
@@ -502,7 +504,7 @@
                 top: '3%',
             },
             grid: {
-                top: '15%',
+                top: '20%',
                 left: '3%',
                 right: '4%',
                 containLabel: true
@@ -513,11 +515,13 @@
                 }
             },
             xAxis: {
+                name: 'Year',
                 type: 'category',
                 boundaryGap: false,
                 data: years
             },
             yAxis: {
+                name: 'Annual growth rate',
                 type: 'value',
                 min: -0.3,
                 max: 0.3

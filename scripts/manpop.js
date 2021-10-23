@@ -33,10 +33,15 @@ const fp = {
     'Transport, Postal and Warehousing': 'https://raw.githubusercontent.com/jianengli/iv_project/main/data/CLUE_Blocks_with_Stats_Transport%2C%20Postal%20and%20Warehousing.geojson',
     'Wholesale Trade': 'https://raw.githubusercontent.com/jianengli/iv_project/main/data/CLUE_Blocks_with_Stats_Wholesale%20Trade.geojson'
 }
+let prevButton = {className: 'deactive'};
+let prevLayer = '';
 
 // Media Vars
 var media;
 var isNarrow = window.matchMedia("(max-width: 620px)");
+
+
+
 function changeMedia(x) {
   if (x.matches) {
     
@@ -220,25 +225,29 @@ function changeTime(settings) {
   if(map) {
 
     // VIZ
-    map.setPaintProperty("block-fills",
-                         "fill-extrusion-height",
-                         ["*", ["get", YEAR], 5000]);
+    for (let key in fp) {
+        map.setPaintProperty(key,
+            "fill-extrusion-height",
+            ["*", ["get", YEAR], 5000]);
 
-    map.setPaintProperty("block-fills",
-                          "fill-extrusion-color",
-                          {"base": 1,
-                           "type": "interval",
-                           "property": YEAR,
-                           "stops": [[0, "#c8dcf4"],
-                                     [0.01, "#fdd49e"],
-                                     [0.02, "#fee8c8"],
-                                     [0.04, "#fdbb84"],
-                                     [0.08, "#fc8d59"],
-                                     [0.16, "#ef6548"],
-                                     [0.32, "#d7301f"],
-                                     [0.64, "#b30000"],
-                                     [0.90, "#7f0000"]],
-                           "default": "#800026"});
+        map.setPaintProperty(key,
+            "fill-extrusion-color",
+            {
+                "base": 1,
+                "type": "interval",
+                "property": YEAR,
+                "stops": [[0, "#c8dcf4"],
+                    [0.01, "#fdd49e"],
+                    [0.02, "#fee8c8"],
+                    [0.04, "#fdbb84"],
+                    [0.08, "#fc8d59"],
+                    [0.16, "#ef6548"],
+                    [0.32, "#d7301f"],
+                    [0.64, "#b30000"],
+                    [0.90, "#7f0000"]],
+                "default": "#800026"
+            });
+    }
   }
 }
 
@@ -287,8 +296,9 @@ function changeMode(settings) {
     d3.select("#cb13").property("checked", true);
 
     // Update map. TODO:
-    map.setFilter('block-fills', ['in', "clue_area", "Kensington","Parkville","North Melbourne","West Melbourne (Residential)","West Melbourne (Industrial)","Port Melbourne","Docklands","Melbourne (CBD)","Southbank","South Yarra","East Melbourne","Carlton","Melbourne (Remainder)"]);
-
+    for (let key in fp) {
+        map.setFilter(key, ['in', "clue_area", "Kensington", "Parkville", "North Melbourne", "West Melbourne (Residential)", "West Melbourne (Industrial)", "Port Melbourne", "Docklands", "Melbourne (CBD)", "Southbank", "South Yarra", "East Melbourne", "Carlton", "Melbourne (Remainder)"]);
+    }
     // Reset the time.
     changeTime({year: 0});
     slideYearCallback(d3.event, 0);
@@ -333,39 +343,55 @@ map.on("load", function(e) {
         (cb13.property("checked")) ? filter.add("Melbourne (Remainder)") : filter.delete("Melbourne (Remainder)");
 
         // Set the filter based on the set.
-        map.setFilter('block-fills', ['in', "clue_area"].concat(Array.from(filter)));
+        for (let key in fp) {
+            map.setFilter(key, ['in', "clue_area"].concat(Array.from(filter)));
+        }
     });
 
-    map.addSource('blocks', {
-        'type': 'geojson',
-        'data': fp['Financial and Insurance Services']
-    });
+    for (let key in fp)
+    {
+        map.addSource(key+'1', {
+            'type': 'geojson',
+            'data': fp[key]
+        });
 
 // The feature-state dependent fill-opacity expression will render the hover effect
 // when a feature's hover state is set to true.
-    map.addLayer({
-        'id': 'block-fills',
-        'type': 'fill-extrusion',
-        'source': 'blocks',
-        'layout': {},
-        "paint": {"fill-extrusion-opacity": 0.6,
-            "fill-extrusion-height": ["*", ["get", "2002"], 5000],
-            "fill-extrusion-height-transition": {duration: 500,
-                delay: 0},
-            "fill-extrusion-color": {"base": 1,
-                "type": "interval",
-                "property": "2002",
-                "default": "#800026",
-                "stops": [[0, "#c8dcf4"],
-                    [0.01, "#fdd49e"],
-                    [0.02, "#fee8c8"],
-                    [0.04, "#fdbb84"],
-                    [0.08, "#fc8d59"],
-                    [0.16, "#ef6548"],
-                    [0.32, "#d7301f"],
-                    [0.64, "#b30000"],
-                    [0.90, "#7f0000"]]}}
-    });
+        map.addLayer({
+            'id': key,
+            'type': 'fill-extrusion',
+            'source': key+'1',
+            'layout': {},
+            "paint": {
+                "fill-extrusion-opacity": 0.6,
+                "fill-extrusion-height": ["*", ["get", "2002"], 5000],
+                "fill-extrusion-height-transition": {
+                    duration: 500,
+                    delay: 0
+                },
+                "fill-extrusion-color": {
+                    "base": 1,
+                    "type": "interval",
+                    "property": "2002",
+                    "default": "#800026",
+                    "stops": [[0, "#c8dcf4"],
+                        [0.01, "#fdd49e"],
+                        [0.02, "#fee8c8"],
+                        [0.04, "#fdbb84"],
+                        [0.08, "#fc8d59"],
+                        [0.16, "#ef6548"],
+                        [0.32, "#d7301f"],
+                        [0.64, "#b30000"],
+                        [0.90, "#7f0000"]]
+                }
+            },
+        });
+        map.setLayoutProperty(
+            key,
+            'visibility',
+            'none'
+        );
+    }
 
   map.on('mousemove', (e) => {
     const features = map.queryRenderedFeatures(e.point);
@@ -402,6 +428,70 @@ map.on("load", function(e) {
   if (media === "full") changeMode({id: 'viz'});
   if (media === "mobile") changeMode({id: 'viz'});
 
+});
+
+let key_list = [];
+
+map.on('idle', () => {
+    // If these two layers were not added to the map, abort
+    if (!map.getLayer('Wholesale Trade')) {
+        window.alert(1);
+        return;
+    }
+    // Enumerate ids of the layers.
+    for (let key in fp) {
+        key_list.push(key);
+    }
+    // Set up the corresponding toggle button for each layer.
+    for (const id of key_list) {
+        // Skip layers that already have a button set up.
+        if (document.getElementById(id)) {
+            continue;
+        }
+
+        // Create a link.
+        const link = document.createElement('a');
+        link.id = id;
+        link.href = '#';
+        link.textContent = id;
+        link.className = 'deactive';
+
+        // Show or hide layer when the toggle is clicked.
+        link.onclick = function (e) {
+            const clickedLayer = this.textContent;
+            e.preventDefault();
+            e.stopPropagation();
+            const visibility = map.getLayoutProperty(
+                clickedLayer,
+                'visibility'
+            );
+            prevButton.className = 'deactive';
+            if (prevLayer.length > 0) {
+                map.setLayoutProperty(
+                    prevLayer,
+                    'visibility',
+                    'none'
+                );
+            }
+            // Toggle layer visibility by changing the layout object's visibility property.
+            if (visibility === 'visible') {
+                // map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                // this.className = 'none';
+            } else {
+                this.className = 'active';
+                prevButton = this;
+                prevLayer = clickedLayer;
+                map.setLayoutProperty(
+                    clickedLayer,
+                    'visibility',
+                    'visible'
+                );
+            }
+        };
+
+        const layers = document.getElementById('menu');
+        layers.appendChild(link);
+    }
 });
 
 // Set default map cursor to a hand.

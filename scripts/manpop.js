@@ -60,19 +60,20 @@ changeMedia(isNarrow); // Call listener function at run time
 isNarrow.addListener(changeMedia); // Attach listener function on state changes
 
 // CB Controls vars
-const cb1 = d3.select("#cb1");
-const cb2 = d3.select("#cb2");
-const cb3 = d3.select("#cb3");
-const cb4 = d3.select("#cb4");
-const cb5 = d3.select("#cb5");
-const cb6 = d3.select("#cb6");
-const cb7 = d3.select("#cb7");
-const cb8 = d3.select("#cb8");
-const cb9 = d3.select("#cb9");
-const cb10 = d3.select("#cb10");
-const cb11 = d3.select("#cb11");
-const cb12 = d3.select("#cb12");
-const cbn = d3.selectAll(".cbn");
+var cb1 = d3.select("#cb1");
+var cb2 = d3.select("#cb2");
+var cb3 = d3.select("#cb3");
+var cb4 = d3.select("#cb4");
+var cb5 = d3.select("#cb5");
+var cb6 = d3.select("#cb6");
+var cb7 = d3.select("#cb7");
+var cb8 = d3.select("#cb8");
+var cb9 = d3.select("#cb9");
+var cb10 = d3.select("#cb10");
+var cb11 = d3.select("#cb11");
+var cb12 = d3.select("#cb12");
+var cb13 = d3.select("#cb13");
+var cbn = d3.selectAll(".cbn");
 
 // Slider vars
 var interval;
@@ -228,7 +229,7 @@ function changeTime(settings) {
                           {"base": 1,
                            "type": "interval",
                            "property": YEAR,
-                           "stops": [[0, "#aac9fa"],
+                           "stops": [[0, "#c8dcf4"],
                                      [0.01, "#fdd49e"],
                                      [0.02, "#fee8c8"],
                                      [0.04, "#fdbb84"],
@@ -286,8 +287,7 @@ function changeMode(settings) {
     d3.select("#cb13").property("checked", true);
 
     // Update map. TODO:
-    map.setFilter('viz', ['in', 'cd', 101, 102, 103, 104, 105, 106,
-                          107, 108, 109, 110, 111, 112]);
+    map.setFilter('block-fills', ['in', "clue_area", "Kensington","Parkville","North Melbourne","West Melbourne (Residential)","West Melbourne (Industrial)","Port Melbourne","Docklands","Melbourne (CBD)","Southbank","South Yarra","East Melbourne","Carlton","Melbourne (Remainder)"]);
 
     // Reset the time.
     changeTime({year: 0});
@@ -308,6 +308,34 @@ function changeMode(settings) {
 // Define map behavior and callback functions.
 map.on("load", function(e) {
 
+    // Draw sliders.
+    getSliders();
+
+    // Visualization District filters.
+    cbn.on("change", function() {
+
+        // Init a set of all districts.
+        const filter = new Set(["Kensington", "Parkville", "North Melbourne", "West Melbourne (Residential)", "West Melbourne (Industrial)", "Port Melbourne", "Docklands", "Melbourne (CBD)", "Southbank", "South Yarra", "East Melbourne", "Carlton", "Melbourne (Remainder)"]);
+
+        // Add and remove callbacks.
+        (cb1.property("checked")) ? filter.add("Kensington") : filter.delete("Kensington");
+        (cb2.property("checked")) ? filter.add("Parkville") : filter.delete("Parkville");
+        (cb3.property("checked")) ? filter.add("North Melbourne") : filter.delete("North Melbourne");
+        (cb4.property("checked")) ? filter.add("West Melbourne (Residential)") : filter.delete("West Melbourne (Residential)");
+        (cb5.property("checked")) ? filter.add("West Melbourne (Industrial)") : filter.delete("West Melbourne (Industrial)");
+        (cb6.property("checked")) ? filter.add("Port Melbourne") : filter.delete("Port Melbourne");
+        (cb7.property("checked")) ? filter.add("Docklands") : filter.delete("Docklands");
+        (cb8.property("checked")) ? filter.add("Melbourne (CBD)") : filter.delete("Melbourne (CBD)");
+        (cb9.property("checked")) ? filter.add("Southbank") : filter.delete("Southbank");
+        (cb10.property("checked")) ? filter.add("South Yarra") : filter.delete("South Yarra");
+        (cb11.property("checked")) ? filter.add("East Melbourne") : filter.delete("East Melbourne");
+        (cb12.property("checked")) ? filter.add("Carlton") : filter.delete("Carlton");
+        (cb13.property("checked")) ? filter.add("Melbourne (Remainder)") : filter.delete("Melbourne (Remainder)");
+
+        // Set the filter based on the set.
+        map.setFilter('block-fills', ['in', "clue_area"].concat(Array.from(filter)));
+    });
+
     map.addSource('blocks', {
         'type': 'geojson',
         'data': fp['Financial and Insurance Services']
@@ -320,7 +348,7 @@ map.on("load", function(e) {
         'type': 'fill-extrusion',
         'source': 'blocks',
         'layout': {},
-        "paint": {"fill-extrusion-opacity": 0.8,
+        "paint": {"fill-extrusion-opacity": 0.6,
             "fill-extrusion-height": ["*", ["get", "2002"], 5000],
             "fill-extrusion-height-transition": {duration: 500,
                 delay: 0},
@@ -328,7 +356,7 @@ map.on("load", function(e) {
                 "type": "interval",
                 "property": "2002",
                 "default": "#800026",
-                "stops": [[0, "#aac9fa"],
+                "stops": [[0, "#c8dcf4"],
                     [0.01, "#fdd49e"],
                     [0.02, "#fee8c8"],
                     [0.04, "#fdbb84"],
@@ -338,33 +366,6 @@ map.on("load", function(e) {
                     [0.64, "#b30000"],
                     [0.90, "#7f0000"]]}}
     });
-
-  // Draw sliders.
-  getSliders();
-
-  // Visualization District filters.
-  cbn.on("change", function() { 
-    
-    // Init a set of all districts.
-    var filter = new Set([101,102,103,104,105,106,107,108,109,110,111,112]);
-
-    // Add and remove callbacks.
-    (cb1.property("checked")) ? filter.add(101) : filter.delete(101);
-    (cb2.property("checked")) ? filter.add(102) : filter.delete(102);
-    (cb3.property("checked")) ? filter.add(103) : filter.delete(103);
-    (cb4.property("checked")) ? filter.add(104) : filter.delete(104);
-    (cb5.property("checked")) ? filter.add(105) : filter.delete(105);
-    (cb6.property("checked")) ? filter.add(106) : filter.delete(106);
-    (cb7.property("checked")) ? filter.add(107) : filter.delete(107);
-    (cb8.property("checked")) ? filter.add(108) : filter.delete(108);
-    (cb9.property("checked")) ? filter.add(109) : filter.delete(109);
-    (cb10.property("checked")) ? filter.add(110) : filter.delete(110);
-    (cb11.property("checked")) ? filter.add(111) : filter.delete(111);
-    (cb12.property("checked")) ? filter.add(112) : filter.delete(112);
-
-    // Set the filter based on the set.
-    map.setFilter('viz', ['in', 'cd'].concat(Array.from(filter)));
-  });
 
   map.on('mousemove', (e) => {
     const features = map.queryRenderedFeatures(e.point);
@@ -398,8 +399,8 @@ map.on("load", function(e) {
   });
 
   // Initialize app mode.
-  if (media == "full") changeMode({id: 'viz'});
-  if (media == "mobile") changeMode({id: 'viz'});
+  if (media === "full") changeMode({id: 'viz'});
+  if (media === "mobile") changeMode({id: 'viz'});
 
 });
 

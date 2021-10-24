@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+
+  <!-- META -->
+  <meta charset='utf-8' />
+  <meta name='viewport' content='initial-scale=1, maximum-scale=1, user-scalable=no' />
+  <meta name="format-detection" content="telephone=no">
+
+  <!-- TITLE -->
+  <title>Melbourne</title>
+
+  <!-- STYLE SHEETS -->
+  <link href='https://fonts.googleapis.com/css?family=Montserrat:300,400,600' rel='stylesheet'>
+  <link rel='stylesheet' href='stylesheets/style.css' type='text/css' />
+  <link rel='stylesheet' href='stylesheets/d3.slider.css' type='text/css' />
+
+  <!-- D3 -->
+  <script src='scripts/d3.min.js'></script>
+  <script src='scripts/d3.slider.js'></script>
+
+  <!-- MapBox -->
+  <script src='https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.css' rel='stylesheet' />
+
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div id='header'>
+
+  <!-- HEADER/ABOUT-LINK -->
+  <div id='about-link'>
+    <span class='desktop'>About</span>
+  </div>
+
+  <!-- HEADER/LEGEND-MOBILE -->
+  <div id='legend-mobile'></div>
+
+  <!-- HEADER/MODES -->
+  <div id='modes'>
+
+    <div class='mode' id='mode-viz'>
+      <span class='desktop'>Visualization</span>
+      <span class='mobile'>Viz</span>
+    </div>
+
+
+  </div>
+
+  <!-- HEADER/TITLE -->
+  <div id='title'>
+    <span class='desktop'>Manhattan&nbsp;Population&nbsp;Explorer</span>
+  </div>
+
+</div>
+
+<!-- ABOUT -->
+<div class='about' id='about'>
+
+  <!-- ABOUT/CLOSE -->
+  <div id = 'about-close'></div>
+
+  <!-- ABOUT/CONTENT -->
+  <div id='about-content'>
+
+    <!-- ABOUT/CONTENT/HEADER -->
+    <div id = 'about-header'>Manhattan: A Tale of Two Population Extremes</div>
+
+    <!-- ABOUT/CONENT/TEXT -->
+    <div id = 'about-text'>
+
+      <p>
+        Measuring just 13 miles long by 2 miles wide, New York City's most-famous borough has a well-earned reputation for shoebox-sized apartments, shoulder-to-shoulder subway commutes, and cubicle-farm high-rises.  Though the US Census provides a cozy estimate of 1.6 million people calling Manhattan 'home', the island's true population swells considerably, like clock-work, every Monday through Friday.  Obtaining upper bounds on the workday population of Manhattan is no easy task, and the NYU Wagner School has <a href=' '>ballparked a peak estimate</a > of about 4 million people, representing an influx of roughly the population of Houston every workday.  To put this in perspective, if Manhattan were a state, it would sit just above Oregon at <em>27th</em> on a list of U.S. states ranked by population every afternoon.
+      </p >
+
+      <p>
+        Though the upper and lower bound for Manhattan's dynamic population provides an interesting point of conversation, the question of how Manhattan's population is distributed hour-by-hour, neighborhood-by-neighborhood is of importance to urban planners, public safety managers, and armchair geographers alike. By no means does Manhattan's population spread out evenly across the length of island- one can imagine the Empire State Building being filled to the brim with inter-state workers by late morning, while at the same time much of the working-age population of Inwood has migrated away from its sleepy uptown hamlet.
+
+        Finding appropriate sources for estimating the dynamic population was part of a research project undertaken by Justin Fung while studying at Columbia University under the direction of former NYC Transportation Commissioner Lucius J. Riccio, and ultimately, a transit-based solution was found right under their feet.  Considering the 'vehicle-of-choice' for most Manhattanites is one of the MTA's 6,500 stainless-steel subway cars, and that the nearly 150 stations serving Manhattan provide reasonably-uniform coverage across the island, it stood to reason that subway entrance and exit data would be a pretty good proxy for population distribution across the city.
+      </p >
+
+      <p>
+        Using the Metropolitan Transportation Authority's freely-available <a href='http://web.mta.info/developers/turnstile.html'>turnstile database</a > and <a href='https://spatialityblog.com/2010/07/08/mta-gis-data-update/'>Steven Romalewski's MTA subway data in GIS format</a >, estimates for the net flows of people in and out of Manhattan neighborhoods were made on an hour-by-hour basis both historically and for future dates.  A time-series analysis of this data confirms that usage patterns are heavily dependent on time, day, and location.  The visualization contained herein is the realization of a model of these flows for a hypothetical week in late Spring.  As you click around Manhattan, you may uncover both obvious and not-so-obvious patterns, and perhaps even find a good time to take a stress-free bike ride around the block.
+      </p >
+
+      <!-- ABOUT/CONENT/TEXT/CREDITS -->
+      <div id='about-credits'>
+        <p>
+          <br/>Design, Development, Data & Modelling - <a href='https://www.linkedin.com/in/citrusvanilla' target='_blank'>Justin Fung</a >
+          <br/>Design, Layout inspiration - <a href='https://landscan.ornl.gov/' target='_blank'>Oak Ridge National Laboratory</a >, <a href='https://urbica.co' target='_blank'>Urbica Design</a >
+          <br/>Map engine - <a href='https://www.mapbox.com/mapbox-gl-js/' target='_blank'>Mapbox GL JS</a >
+          <br/>Graphing engine - <a href='https://d3js.org' target='_blank'>D3.js</a >
+          <br/>Github - <a href='https://github.com/citrusvanilla/manhattanpopulationexplorer' target='_blank'>@citrusvanilla</a >
+        </p >
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- SIDE BAR -->
+<div id='sidebar'>
+
+  <!-- LEGEND -->
+  <div id='legend'>
+
+    <!-- LEGEND/CONTENT Do not change it-->
+    <div id='legend-content'>
+
+      <div class='line'>Estimated Population (Census Block):</div>
+
+      <div class='line'>
+        <div class = 'av' id='pop_0'>&#9724;&#xFE0E;</div>
+        <div class='caption'>0&nbsp;-&nbsp;100</div>
+      </div>
+      <div class='line'>
+        <div class = 'av' id='pop_100'>&#9724;&#xFE0E;</div>
+        <div class='caption'>100&nbsp;-&nbsp;200</div>
+      </div>
+      <div class='line'>
+        <div class = 'av' id='pop_200'>&#9724;&#xFE0E;</div>
+        <div class='caption'>200&nbsp;-&nbsp;400</div>
+      </div>
+      <div class='line'>
+        <div class = 'av' id='pop_400'>&#9724;&#xFE0E;</div>
+        <div class='caption'>400&nbsp;-&nbsp;800</div>
+      </div>
+      <div class='line'>
+        <div class = 'av' id='pop_800'>&#9724;&#xFE0E;</div>
+        <div class='caption'>800&nbsp;-&nbsp;1600</div>
+      </div>
+      <div class='line'>
+        <div class = 'av' id='pop_1600'>&#9724;&#xFE0E;</div>
+        <div class='caption'>1600&nbsp;-&nbsp;3200</div>
+      </div>
+      <div class='line'>
+        <div class = 'av' id='pop_3200'>&#9724;&#xFE0E;</div>
+        <div class='caption'>3200&nbsp;-&nbsp;6400</div>
+      </div>
+      <div class='line'>
+        <div class = 'av' id='pop_6400'>&#9724;&#xFE0E;</div>
+        <div class='caption'>6400&nbsp;-&nbsp;12800</div>
+      </div>
+      <div class='line'>
+        <div class = 'av' id='pop_12800'>&#9724;&#xFE0E;</div>
+        <div class='caption'>more&nbsp;than&nbsp;12800</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- NEIGHBORHOOD FILTER -->
+  <div id='cbs' class='desktop'>
+
+    <!-- NEIGHBORHOOD/CONTENT There are 13 areas in total -->
+    <div id='cbs-content'>
+
+      <div class='line'>Visible&nbsp;Districts:</div>
+
+      <div class='line'>
+        <input type='checkbox' id='cb1' class='cbn' checked>
+        <span>&nbsp;Kensington</span>
+      </div>
+      <div class='line'>
+        <input type='checkbox' id='cb2' class='cbn' checked>
+        <span>&nbsp;Parkville</span>
+      </div>
+      <div class='line'>
+        <input type='checkbox' id='cb3' class='cbn' checked>
+        <span>&nbsp;North Melbourne</span>
+      </div>
+      <div class='line'>
+        <input type='checkbox' id='cb4' class='cbn' checked>
+        <span>&nbsp;West Melbourne (Residential)</span>
+      </div>
+      <div class='line'>
+        <input type='checkbox' id='cb5' class='cbn' checked>
+        <span>&nbsp;West Melbourne (Industrial)</span>
+      </div>
+      <div class='line'>
+        <input type='checkbox' id='cb6' class='cbn' checked>
+        <span>&nbsp;Port Melbourne</span>
+      </div>
+      <div class='line'>
+        <input type='checkbox' id='cb7' class='cbn' checked>
+        <span>&nbsp;Docklands</span>
+      </div>
+      <div class='line'>
+        <input type='checkbox' id='cb8' class='cbn' checked>
+        <span>&nbsp;Melbourne (CBD)</span>
+      </div>
+      <div class='line'>
+        <input type='checkbox' id='cb9' class='cbn' checked>
+        <span>&nbsp;Southbank</span>
+      </div>
+      <div class='line'>
+        <input type='checkbox' id='cb10' class='cbn' checked>
+        <span>&nbsp;South Yarra</span>
+      </div>
+      <div class='line'>
+        <input type='checkbox' id='cb11' class='cbn' checked>
+        <span>&nbsp;East Melbourne</span>
+      </div>
+      <div class='line'>
+        <input type='checkbox' id='cb12' class='cbn' checked>
+        <span>&nbsp;Carlton</span>
+      </div>
+      <div class='line'>
+        <input type='checkbox' id='cb13' class='cbn' checked>
+        <span>&nbsp;Melbourne (Remainder)</span>
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+</div>
+
+
+<!-- CONTROLS -->
+<div id = 'controls'>
+  <!--year slider -->>
+  <div id='slider-area-b'>
+    <div id='slider-b'></div>
+  </div>
+
+</div>
+
+
+<!-- TABLEAU CHARTS-->
+<style>
+   .tableauPlaceholder {
+    position: relative;
+    width: 80%;
+    top: 1000px;   
+   }
+</style>
+
+<center><div class='tableauPlaceholder' id='viz1635046057136' style='position: relative'><noscript><a href='#'><img alt='Dashboard 1 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Bo&#47;Book1_16319580770430&#47;Dashboard1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='Book1_16319580770430&#47;Dashboard1' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Bo&#47;Book1_16319580770430&#47;Dashboard1&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /><param name='filter' value='publish=yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1635046057136');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.width='1000px';vizElement.style.height='827px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.width='1000px';vizElement.style.height='827px';} else { vizElement.style.width='100%';vizElement.style.height='877px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script></center>
+
+
+
+
+<!-- MB Map -->
+<style>
+  #features {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 50%;
+    overflow: auto;
+    background: rgba(64, 64, 64, 0.5);
+  }
+  #map canvas {
+    cursor: crosshair;
+  }
+  #menu {
+    background: #fff;
+    position: absolute;
+    z-index: 1;
+    top: 100px;
+    left: 10px;
+    border-radius: 3px;
+    width: 160px;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    font-family: 'Open Sans', sans-serif;
+  }
+
+  #menu a {
+    font-size: 13px;
+    color: #404040;
+    display: block;
+    margin: 0;
+    padding: 10px;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+    text-align: center;
+  }
+
+  #menu a:last-child {
+    border: none;
+  }
+
+  #menu a:hover {
+    background-color: #f8f8f8;
+    color: #404040;
+  }
+
+  #menu a.active {
+    background-color: #3887be;
+    color: #ffffff;
+  }
+
+  #menu a.active:hover {
+    background: #3074a4;
+  }
+
+</style>
+<nav id="menu"></nav>
+<div id="map"></div>
+<pre id="features"></pre>
+<!-- JS-MANPOP -->
+<script src='scripts/manpop.js'></script>
+
+</body>
+
+</html>

@@ -1,4 +1,4 @@
-# Manhattan Population Explorer
+# Melbourne Industries Explorer
 
 A MapBoxGL and D3 web mapping tool for exploring the dynamic population of Manhattan.
 

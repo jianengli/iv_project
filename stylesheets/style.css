@@ -356,6 +356,7 @@ a:active {
 
 #menu {
     background: #fff;
+    opacity: 0.7;
     position: relative;
     z-index: 1;
     top: 100px;
@@ -409,12 +410,20 @@ a:active {
   padding: 0;
 }
 
+/******************** PART 2 *************************/
+
+.tableauPlaceholder {
+    position: absolute;
+    width: 100%;
+    top: 200px;
+}
+
 /******************** PART 3 *************************/
 
 #part3 {
     /* width: 1600px;height:1000px; */
     position: absolute;
-    top: 1100px;
+    top: 2000px;
     left: 50px;
 }
 

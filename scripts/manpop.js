@@ -3,13 +3,8 @@ mapboxgl.accessToken = "pk.eyJ1Ijoieml5aXpoYW5nMiIsImEiOiJja3VzZ21xNTIxbTZ6MnBxc
 
 // Global vars
 var vizControl = d3.select("#mode-viz");
-var statsControl = d3.select("#mode-stats");
-var storyControl = d3.select("#mode-story");
 var currentMode = "story";  //init mode
-var neighborhood = "MN";
 var YEAR;
-var YEAR_stats;
-var color_total = false;
 var year = 0;
 var syear;
 const fp = {
@@ -88,7 +83,6 @@ var value = 0;
 // Info Panel vars
 var info = d3.select("#info");
 var infoGraph = d3.select("#info-popgraph");
-var nta_clicked = false;
 
 // Story panel vars
 var story = d3.select("#storymode");
@@ -355,8 +349,6 @@ map.on("load", function(e) {
             'data': fp[key]
         });
 
-// The feature-state dependent fill-opacity expression will render the hover effect
-// when a feature's hover state is set to true.
         map.addLayer({
             'id': key,
             'type': 'fill-extrusion',
@@ -392,37 +384,6 @@ map.on("load", function(e) {
             'none'
         );
     }
-
-  map.on('mousemove', (e) => {
-    const features = map.queryRenderedFeatures(e.point);
-
-// Limit the number of properties we're displaying for
-// legibility and performance
-    const displayProperties = [
-        'type',
-        'properties',
-        'id',
-        'layer',
-        'source',
-        'sourceLayer',
-        'state'
-    ];
-
-    const displayFeatures = features.map((feat) => {
-        const displayFeat = {};
-        displayProperties.forEach((prop) => {
-            displayFeat[prop] = feat[prop];
-        });
-        return displayFeat;
-    });
-
-// Write object as string with an indent of two spaces.
-    document.getElementById('features').innerHTML = JSON.stringify(
-        displayFeatures,
-        null,
-        2
-    );
-  });
 
   // Initialize app mode.
   if (media === "full") changeMode({id: 'viz'});

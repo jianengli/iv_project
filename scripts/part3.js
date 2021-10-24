@@ -1,4 +1,3 @@
-
 var chartDom = document.getElementById('part3');
 var myChart = echarts.init(chartDom);
 var option;
@@ -431,7 +430,7 @@ for (let i = 0; i < industryTypeNum; i++) {
     dataset['data'] = dataLists[i]
     datasets.push(dataset)
 }
-// console.log(dataLists) 
+// console.log(dataLists)
 
 const industryNames_new = []
 industryNames_new.push('All')
@@ -457,15 +456,15 @@ option = {
             color: '#0854c4',//blue
             fontStyle: 'normal',//The font style of the main title text, the default is normal, italic (italic), oblique (italic)
             fontWeight: "bold",//Optional normal (normal), bold (bold), bolder (bold), lighter (thinner), 100|200|300|400|500...
-            fontFamily: "san-serif",//Theme text font 
+            fontFamily: "san-serif",//Theme text font
             fontSize: 24//Theme text font size, the default is 18px
         },
         subtextStyle: {//Subtitle content style
         },
     },
-    textStyle: {// lable 
+    textStyle: {// lable
         color: '#0854c4',//blue
-        fontSize: 16 
+        fontSize: 16
     },
     tooltip: {
         trigger: 'axis',

@@ -199,38 +199,38 @@ a:active {
 }
 
 #pop_0 {
-  color: #FFF7EC;
+  color: #c8dcf4;
 }
 
-#pop_100 {
+#pop_1 {
   color: #fee8c8;
 }
 
-#pop_200 {
+#pop_2 {
   color: #fdd49e;
 }
 
-#pop_400 {
+#pop_4 {
   color: #fdbb84;
 }
 
-#pop_800 {
+#pop_8 {
   color: #fc8d59;
 }
 
-#pop_1600 {
+#pop_16 {
   color: #ef6548;
 }
 
-#pop_3200 {
+#pop_32 {
   color: #d7301f;
 }
 
-#pop_6400 {
+#pop_64 {
   color: #b30000;
 }
 
-#pop_12800 {
+#pop_90 {
   color: #7f0000;
 }
 
@@ -253,57 +253,6 @@ a:active {
   display: block;
   margin-top: 10px;
 }
-
-
-/******************** STATS LEGEND *************************/
-
-#diff_n4000 {
-  color: #d73027;
-}
-
-#diff_n2000 {
-  color: #f46d43;
-}
-
-#diff_n1000{
-  color: #fdae61;
-}
-
-#diff_n500 {
-  color: #fee08b;
-}
-
-#diff_500 {
-  color: #ffffbf;
-}
-
-#diff_2000 {
-  color: #d9ef8b;
-}
-
-#diff_4000 {
-  color: #a6d96a;
-}
-
-#diff_12000 {
-  color: #66bd63;
-}
-
-#diff_32000 {
-  color: #1a9850;
-}
-
-#statslegend {
-  z-index: 1012022;
-  background: rgba(12, 12, 12, 0.85);
-  font-size: 12px;
-}
-
-#statslegend-content {
-  padding: 5px;
-  display: none;
-}
-
 
 /******************** INFO *************************/
 
@@ -385,88 +334,13 @@ a:active {
   stroke: #666;
 }
 
-
-/******************** STORYMODE *************************/
-
-#storymode {
- position: absolute;
- z-index: 1012022;
- top: 60px;
- left: 10px;
- width: 300px;
- height: 300px;
- background: rgba(12, 12, 12, 0.8);
- color: #eee;
- padding: 10px;
- display: block;
-}
-
-#storymode-content {
- font-size: 12px;
- line-height: 16px;
-}
-
-#storymode-header {
- font-weight: 600;
- margin-bottom: 10px;
- text-align: left;
- font-size: 14px;
-}
-
-#storymode-controls {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-#storymode-controls-numbers {
-  display: inline-block;
-  text-align: center;
-  width: 60px;
-}
-
-#story-back {
-  visibility: hidden;
-}
-
-i {
-    border: solid white;
-    border-width: 0 3px 3px 0;
-    display: inline-block;
-    padding: 3px;
-    cursor: pointer;
-}
-
-.right {
-    transform: rotate(-45deg);
-    -webkit-transform: rotate(-45deg);
-}
-
-.left {
-    transform: rotate(135deg);
-    -webkit-transform: rotate(135deg);
-}
-
-.noselect {
-  -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome and Opera */
-}
-
-
-
 /******************** CONTROLS *************************/
 
 #controls {
   z-index: 101010;
   position: absolute;
   left: 50%;
-  bottom: 30px;
+  top: 950px;
   margin-left: -250px;
   width: 500px;
   text-align: center;
@@ -480,12 +354,45 @@ i {
   line-height: 30px;
 }
 
-#slider-area-t {
-  display: inline-block;
-  width: 300px;
-  background: rgba(0,0,0,0.5);
-  line-height: 30px;
-  margin-bottom: 20px;
+#menu {
+    background: #fff;
+    position: relative;
+    z-index: 1;
+    top: 100px;
+    left: 10px;
+    border-radius: 3px;
+    width: 160px;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    font-family: 'Open Sans', sans-serif;
+}
+
+#menu a {
+    font-size: 13px;
+    color: #404040;
+    display: block;
+    margin: 0;
+    padding: 10px;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+    text-align: center;
+}
+
+#menu a:last-child {
+    border: none;
+}
+
+#menu a:hover {
+    background-color: #f8f8f8;
+    color: #404040;
+}
+
+#menu a.active {
+    background-color: #3887be;
+    color: #ffffff;
+}
+
+#menu a.active:hover {
+    background: #3074a4;
 }
 
 
@@ -496,12 +403,20 @@ i {
   top: 0;
   bottom: 0;
   width: 100%;
-  height: 100%;
+  height: 1000px;
   display: block;
   margin: 0;
   padding: 0;
 }
 
+/******************** PART 3 *************************/
+
+#part3 {
+    /* width: 1600px;height:1000px; */
+    position: absolute;
+    top: 1100px;
+    left: 50px;
+}
 
 /******************** MEDIA QUERIES *************************/
 
@@ -539,26 +454,6 @@ i {
       right: 0;
     }
 
-    #storymode {
-      position: absolute;
-      z-index: 1012022;
-      bottom: 0;
-      left: auto;
-      top: auto;
-      height: auto;
-      width: calc(100% - 20px);
-      background: rgba(12, 12, 12, 0.8);
-      color: #eee;
-      padding: 10px;
-      display: none;
-    }
-
-    #storymode-content {
-      font-size: 12px;
-      line-height: 16px;
-      margin-bottom: 30px;
-    }
-
     #info {
       position: absolute;
       z-index: 1012022;
@@ -587,10 +482,6 @@ i {
     #statslegend {
       display: none;
     }
-
-
-
-
 }
 
 
